@@ -1,0 +1,70 @@
+//Servo control pins
+#define GrabberControl 7
+#define LeftWheelControl 8
+#define RightWheelControl 9
+#define COUNTERCLOCKWISE 1700
+#define CLOCKWISE 1300
+#define STOP 1500
+#define GRABBING 100 //degrees to close grabber
+#define RELEASE 10 //degrees to open grabber
+
+#define REVERSE 1
+#define FORWARD 2
+#define TURNLEFT 3
+#define TURNRIGHT 4
+#define STOPSERVO 5
+#define OPENGRABBER 6
+#define CLOSEGRABBER 7
+#define GRABBER 8
+
+void RobotAction(int command, int duration, int degree_increment) {
+	static int grabber_position;
+	swtich(command) {
+		case REVERSE: {
+			LeftWheel.writeMicroseconds(COUNTERCLOCKWISE);
+			RightWheel.writeMicroseconds(CLOCKWISE);
+			delay(duration);
+			break;
+		}
+		case FORWARD: {
+			LeftWheel.writeMicroseconds(CLOCKWISE);
+			RightWheel.writeMicroseconds(COUNTERCLOCKWISE);
+			delay(duration);
+			break;
+		}
+		case TURNLEFT: {
+			LeftWheel.writeMicroseconds(CLOCKWISE);
+			RightWheel.writeMicroseconds(CLOCKWISE);
+			delay(duration);
+			break;
+		}
+		case TURNRIGHT: {
+			LeftWheel.writeMicroseconds(COUNTERCLOCKWISE);
+			RightWheel.writeMicroseconds(COUNTERCLOCKWISE);
+			delay(duration);
+			break;
+		}
+		case STOPSERVO: {
+			LeftWheel.writeMicroseconds(STOP);
+			RightWheel.writeMicroseconds(STOP);
+			delay(duration);
+			break;
+		}
+		case OPENGRABBER: {
+			Grabber.write(RELEASE);
+			delay(duration);
+			Serial.println("open grabber....");
+			break;
+		}
+		case CLOSEGRABBER: {
+			Grabber.write(GRABBING);
+			delay(duration);
+			break;
+		}
+		case GRABBER: { //fine control of grabber
+			Grabber.write(grabber_position + duration);
+			break;
+		}
+	} //end switch
+	
+}
